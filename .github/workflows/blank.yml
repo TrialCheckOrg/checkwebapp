@@ -19,8 +19,9 @@ jobs:
           echo "PORT: ${{ secrets.PORT }}"
           echo "DB_NAME: ${{ secrets.DB_NAME }}"
           echo "DB_USER: ${{ secrets.DB_USER }}"
-          echo "DB_PASSWORD: ${{ secrets.DB_PASSWORD }}"
+          echo "DB_PASSWORD: ***"  # Avoid printing the actual password
           echo "DB_HOST: ${{ secrets.DB_HOST }}"
+          
       - name: Set up PostgreSQL
         run: |
           sudo apt-get update
@@ -36,19 +37,19 @@ jobs:
       - name: Change PostgreSQL Password
         run: |
           sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '${{ secrets.DB_PASSWORD }}';"
-
+          
       - name: Update PostgreSQL Authentication Method
         run: |
           sudo sed -i 's/^\(host.all.*all.\)\(ident\)\(.*\)$/\1md5\3/g' /etc/postgresql/14/main/pg_hba.conf
-
+          
       - name: Restart PostgreSQL
         run: sudo systemctl restart postgresql
 
       - name: Login to PostgreSQL
         run: |
-          export DBPASSWORD='${{ secrets.DB_PASSWORD }}'
+          export PGPASSWORD='${{ secrets.DB_PASSWORD }}'  # Use PGPASSWORD to pass the password
           psql -h ${{ secrets.DB_HOST }} -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }} -c "SELECT version();"
-
+          
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
