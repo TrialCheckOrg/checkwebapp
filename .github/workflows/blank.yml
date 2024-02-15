@@ -25,10 +25,33 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install postgresql postgresql-contrib
-          sudo service postgresql start
-      # Verify database connection
-      - name: Verify Database Connection
-        run: psql -h ${{ secrets.DB_HOST }} -U ${{ secrets.DB_USER }} -d ${{ secrets.DB_NAME }}
+          
+      - name: Start PostgreSQL Service
+        if: ${{ !contains(steps.status.outputs.service_status, 'running') }}
+        run: sudo service postgresql start
+
+      - name: Adjust Permissions on PostgreSQL Socket File
+        run: sudo chmod 777 /var/run/postgresql/.s.PGSQL.5432 || true
+
+      - name: Change PostgreSQL Password
+        run: |
+          sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '${{ secrets.PG_PASSWORD }}';"
+
+      - name: Update PostgreSQL Authentication Method
+        run: |
+          sudo sed -i 's/^\(host.all.*all.\)\(ident\)\(.*\)$/\1md5\3/g' /etc/postgresql/14/main/pg_hba.conf
+
+      - name: Restart PostgreSQL
+        run: sudo systemctl restart postgresql
+
+      - name: Create PostgreSQL Database
+        run: |
+          sudo -u postgres psql -c "CREATE DATABASE sjdatabase;"
+
+      - name: Login to PostgreSQL
+        run: |
+          export PGPASSWORD='${{ secrets.PG_PASSWORD }}'
+          psql -U postgres -h localhost -d postgres -c "SELECT version();"
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
