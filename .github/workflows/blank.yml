@@ -46,7 +46,7 @@ jobs:
 
       - name: Create PostgreSQL Database
         run: |
-          sudo -u postgres psql -c "CREATE DATABASE secrets.DB_NAME;"
+          sudo -u postgres psql -c "CREATE DATABASE ${{ secrets.DB_NAME }};"
 
       - name: Login to PostgreSQL
         run: |
