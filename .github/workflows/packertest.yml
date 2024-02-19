@@ -20,6 +20,10 @@ jobs:
           sudo mv packer /usr/local/bin/
           packer --version
 
+      - name: Initializing the plugins
+        run: |
+          packer init .
+
       - name: Check Packer formatting
         run: |
           packer fmt -check .
