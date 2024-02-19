@@ -1,7 +1,8 @@
 name: Install and Configure gcloud CLI
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - main
 
