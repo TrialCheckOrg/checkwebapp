@@ -1,0 +1,20 @@
+name: Install and Configure gcloud CLI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  install-gcloud:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install and configure gcloud
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
