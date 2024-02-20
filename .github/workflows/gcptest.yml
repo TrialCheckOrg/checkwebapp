@@ -19,9 +19,11 @@ jobs:
         with:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          
-      - name: Package webappOrg-main directory
-        run: zip -r checkwebapp-main.zip checkwebapp-main
-
+      
+      - name: Package checkwebapp-main directory
+        run: |
+          ls -l  # Check the contents of the current directory
+          zip -r checkwebapp-main.zip checkwebapp-main
+      
       - name: Copy artifact to Packer build context
         run: cp checkwebapp-main.zip /checkwebapp     
