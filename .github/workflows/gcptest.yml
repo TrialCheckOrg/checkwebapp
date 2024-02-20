@@ -1,12 +1,13 @@
 name: Install and Configure gcloud CLI
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - main
 
 jobs:
+  zip:
+    runs-on: ubuntu-latest
   install-gcloud:
     runs-on: ubuntu-latest
 
