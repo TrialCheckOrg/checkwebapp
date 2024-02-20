@@ -14,19 +14,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install and configure gcloud
-        uses: google-github-actions/setup-gcloud@v0.2.0
-        with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-      
-
       - name: Package checkwebapp directory
         run: |
-          zip -r checkwebapp.zip checkwebapp
+          zip -r checkwebapp.zip checkwebapp/*
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: checkwebapp-artifact
           path: checkwebapp.zip
+
+      - name: Install and configure gcloud
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
