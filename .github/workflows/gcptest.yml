@@ -14,7 +14,7 @@ jobs:
 
       - name: Package checkwebapp directory
         run: |
-          zip -r checkwebapp.zip checkwebapp/*
+          zip -r checkwebapp.zip /*
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
