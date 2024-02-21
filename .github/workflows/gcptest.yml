@@ -1,32 +1,33 @@
-name: Install and Configure gcloud CLI
+name: Custom Image Creation
 
 on:
   push:
     branches:
       - main
-
+      
 jobs:
-  zip:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Package checkwebapp directory
-        run: |
-          zip -r checkwebapp.zip /*
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: checkwebapp-artifact
-          path: checkwebapp.zip
-
   install-gcloud:
     runs-on: ubuntu-latest
+        
     steps:
       - name: Install and configure gcloud
         uses: google-github-actions/setup-gcloud@v0.2.0
         with:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}  
+
+  packer-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use Packer steps
+        uses: ./.github/workflows/packer.yml
+
+  packer-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Building the packer image
+        uses: hashicorp/setup-packer@v1
+        with:
+          version: 1.7.3
+      - name: Run packer build
+        run: packer build packer.pkr.hcl      
