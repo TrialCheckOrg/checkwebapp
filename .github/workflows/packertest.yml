@@ -1,4 +1,4 @@
-name: Packer Status Check
+name: Packer Status Checks
 
 on:
   pull_request:
