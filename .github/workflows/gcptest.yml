@@ -19,6 +19,9 @@ jobs:
   packer-test:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
       - name: Use Packer steps
         uses: ./.github/workflows/packertest.yml
 
@@ -30,4 +33,4 @@ jobs:
         with:
           version: 1.7.3
       - name: Run packer build
-        run: packer build packer.pkr.hcl      
+        run: packer build packer.pkr.hcl   
