@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Use Packer steps
-        uses: ./.github/workflows/packer.yml
+        uses: ./.github/workflows/packertest.yml
 
   packer-run:
     runs-on: ubuntu-latest
